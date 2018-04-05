@@ -39,7 +39,7 @@ def sha256(M): # Return array of bytes of SHA256 hash of input string M
     hv = list(ihv) # Copy initial values to hashvalue array 
     
     for m in range(0,len(pm),64) : # Iterate through message in 512-bit (64 byte) chunks
-        w = [0] * 64 # Initialize 64-entry message schedule array 7
+        w = [0] * 64 # Initialize 64-entry message schedule array
         for i, j in zip(range(16), range(0,63,4)) : w[i] = int.from_bytes(pm[(m + j):(m + j + 4)], 'big') # Copy padded message into first 16 words of message schedule array, 32-bit words
        
         # Extend the first 16 words into the remaining 48 words of the message schedule array
