@@ -32,7 +32,7 @@ def ror(n, x): #32-bit right rotate of integer n, x times.
 def pad(W): # Take input string W and return 512-bit padded message in bytes
     l = (len(W) * 8) # Length of message (8-bit ASCII) in bits
     k = mult_512(l + 8 + 64) # Find K in L + 1  + K + 64 % 512 = 0, 
-    # Note that 1 is represented as b'1000000' in return below (128.to_bytes) so the extra zero bits are accounted for in this call
+    # Note that 1 is represented as b'10000000' in return below (128.to_bytes) so the extra zero bits are accounted for in this call
     return bytes(W,'ascii') + (128).to_bytes(1, 'big') + ((0).to_bytes(1, 'big') * int(k/8)) + l.to_bytes(8, 'big')  # Message + bit "1" + k zero bits + 64-bit block equal to l 
        
 def sha256(M): # Return byte array SHA256 hash of input string M
