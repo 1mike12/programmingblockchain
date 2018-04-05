@@ -31,16 +31,15 @@ def ror(n, x): #32-bit right rotate of integer n, x times.
 
 def pad(W): # Take input string W and return 512-bit padded message in bytes
     l = (len(W) * 8) # Length of message (8-bit ASCII) in bits
-    k = mult_512(l + 8 + 64) # Find K in L + 1  + K + 64 % 512 = 0, 
-    # Note that 1 is represented as b'10000000' in return below (128.to_bytes) so the extra zero bits are accounted for in this call
-    return bytes(W,'ascii') + (128).to_bytes(1, 'big') + ((0).to_bytes(1, 'big') * int(k/8)) + l.to_bytes(8, 'big')  # Message + bit "1" + k zero bits + 64-bit block equal to l 
+    k = mult_512(l + 1 + 64) # Find K in L + 1  + K + 64 % 512 = 0, 
+    return bytes(W,'ascii') + (128).to_bytes(1, 'big') + ((0).to_bytes(1, 'big') * int(k/8)) + l.to_bytes(8, 'big')  # Message + bit "1" + k zero bits + 64-bit block equal to l (big-endian)
        
 def sha256(M): # Return array of bytes of SHA256 hash of input string M
     pm = pad(M) # 512-bit padded message in bytes format
     hv = list(ihv) # Copy initial values to hashvalue array 
     
     for m in range(0,len(pm),64) : # Iterate through message in 512-bit (64 byte) chunks
-        w = [0] * 64 # Initialize 64-entry message schedule array 
+        w = [0] * 64 # Initialize 64-entry message schedule array 7
         for i, j in zip(range(16), range(0,63,4)) : w[i] = int.from_bytes(pm[(m + j):(m + j + 4)], 'big') # Copy padded message into first 16 words of message schedule array, 32-bit words
        
         # Extend the first 16 words into the remaining 48 words of the message schedule array
@@ -84,5 +83,5 @@ def sha256(M): # Return array of bytes of SHA256 hash of input string M
     return b''.join(i.to_bytes(4, 'big') for i in hv) 
 
 # Print the SHA256 hash of "Hello World" in hexadecimal. 
-inp = "Hello World"
-print(''.join('{:02x}'.format(i) for i in sha256(inp))) # Display output in hex 
+inp = 'Hello World'
+print('SHA256 hash of string,', inp+':',''.join('{:02x}'.format(i) for i in sha256(inp))) # Display output in hex 
